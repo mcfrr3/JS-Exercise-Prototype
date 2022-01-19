@@ -39,13 +39,25 @@ Airplane.prototype.land = function () {
         + It should return a string with `name` and `age`. Example: "Mary, 50"
 */
 
-function Person() {
-  
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+  this.stomach = [];
 }
 
+Person.prototype.eat = function (food) {
+  if (this.stomach.length < 10) {
+    this.stomach.push(food);
+  }
+}
 
+Person.prototype.poop = function () {
+  this.stomach.length = 0;
+}
 
-
+Person.prototype.toString = function () {
+  return `${this.name}, ${this.age}`;
+}
 
 
 
@@ -63,10 +75,29 @@ function Person() {
         + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
 */
 
-function Car() {
-  
+function Car(model, milesPerGallon) {
+  this.model = model;
+  this.milesPerGallon = milesPerGallon;
+  this.tank = 0;
+  this.odometer = 0;
 }
 
+Car.prototype.fill = function (gallons) {
+  this.tank += gallons;
+}
+
+Car.prototype.drive = function (distance) {
+  // Decrease tank by amount driven with milesPerGallon taken into consideration
+  // prevent driving if tank < 0
+  const depletion = distance * (this.milesPerGallon / 1);
+
+  if (depletion > this.tank) {
+    return `I ran out of fuel at ${this.odometer} miles`;
+  } else {
+    this.tank -= depletion;
+    this.odometer += distance;
+  }
+}
 
 /*
   TASK 3
@@ -75,18 +106,25 @@ function Car() {
     - Besides the methods on Person.prototype, babies have the ability to `.play()`:
         + Should return a string "Playing with x", x being the favorite toy.
 */
-function Baby() {
- 
+function Baby(name, age, favoriteToy) {
+  Person.call(this, name, age);
+  this.favoriteToy = favoriteToy;
 }
 
+// inherit the methods of Person
+Baby.prototype = Object.create(Person.prototype);
+
+Baby.prototype.play = function () {
+  return `Playing with ${this.favoriteToy}`;
+}
 
 /* 
   TASK 4
   In your own words explain the four principles for the "this" keyword below:
-  1. 
-  2. 
-  3. 
-  4. 
+  1. Window Binding - window, global object or undefined will be bound to 'this' if none of the other rules apply
+  2. Implicit Binding - applied to objects with methods. 'this' bound to object before the dot
+  3. Explicit Binding - 'this' context applied through the use of .call(), .apply() or .bind()
+  4. New Binding - binding through the use of a constructor function and passing arguments
 */
 
 
